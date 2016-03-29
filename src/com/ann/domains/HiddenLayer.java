@@ -1,4 +1,4 @@
-package com.ann.domains.Neuron;
+package com.ann.domains;
 
 import java.util.ArrayList;
 
