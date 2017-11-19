@@ -1,5 +1,8 @@
-from ann_utils import make_matrix
+from ann_utils import make_matrix, between
+
 use_bias = 1
+
+
 class ANN:
 
     def __init__(self):
@@ -30,3 +33,7 @@ class Layer:
         self.error = [0] * self.n_neurons
 
         self.weight = make_matrix(prev_layer_size + use_bias , self.n_neurons)
+
+        for i in range(len(self.weight)):
+            for j in range(len(self.weight[i])):
+                self.weight[i][j] = between(-0.2,0.2)
