@@ -22,11 +22,13 @@ class ANN:
         train the network with the labeled inputs for a maximum number of epochs
         """
         for epoch in range(0, n_epochs):
-            self.set_input(inputs[i])
-            self.forward_propagate()
-            self.update_error_output(targets[i])
-            self.backward_propagate()
-            self.update_weights()
+            
+            for i in range(0, len(inputs)):
+                self.set_input(inputs[i])
+                self.forward_propagate()
+                self.update_error_output(targets[i])
+                self.backward_propagate()
+                self.update_weights()
 
     def predict(self, input):
         """
@@ -130,19 +132,18 @@ class Layer:
 
 if __name__ == '__main__':
 
-    # the AND function
-    and_ann = ANN([2,1])
-    inputs = [[0.0,0.0],[0.0,1.0],[1.0,0.0],[1.0,1.0]]
+    ann = ANN([2,1])
     targets = [[0.0],[0.0],[0.0],[1.0]]
 
+    inputs = [[0.0,0.0],[0.0,1.0],[1.0,0.0],[1.0,1.0]]
     # make preditions with no training
     print("print without training")
     for i in range(len(targets)):
-        print(inputs[i], and_ann.predict(inputs[i]))
+        print(inputs[i], ann.predict(inputs[i]))
 
 
     # train and predict
     print("print with training")
-    and_ann.train(inputs, targets, 20000)
+    ann.train(inputs, targets, 20000)
     for i in range(len(targets)):
-        print(inputs[i], and_ann.predict(inputs[i]))
+        print(inputs[i], ann.predict(inputs[i]))
