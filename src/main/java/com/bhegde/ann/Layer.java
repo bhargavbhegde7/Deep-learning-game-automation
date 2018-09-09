@@ -4,27 +4,38 @@ public class Layer
 {
 
     private int id;
-    private int numOfNeurons;
-    private int biasVal;
+    protected int numOfNeurons;
+    private Double biasVal;
 
-    private Integer[] input;
-    private Integer[] output;
-    private Integer[] error;
+    protected Double[] inputs;
+    protected Double[] outputs;
+    protected Double[] errors;
 
-    private Double[][] weight;
+    protected Double[][] weights;
 
     public Layer(int id, int layerSize, int previousLayerSize)
     {
         this.id = id;
         this.numOfNeurons = layerSize;
-        this.biasVal = 1;
-        this.input = new Integer[numOfNeurons];
-        this.output = new Integer[numOfNeurons + Constants.useBias];
-        this.output[0] = this.biasVal;
-        this.error = new Integer[numOfNeurons];
+        this.biasVal = 1.0;
+        this.inputs = new Double[numOfNeurons];
+        initializeDoubleArray(inputs);
+        this.outputs = new Double[numOfNeurons + Constants.useBias];
+        initializeDoubleArray(outputs);
+        this.outputs[0] = this.biasVal;
+        this.errors = new Double[numOfNeurons];
+        initializeDoubleArray(errors);
 
-        weight = makeMatrix(previousLayerSize+Constants.useBias, this.numOfNeurons, Constants.initMin, Constants.initMax);
-        
+        weights = makeMatrix(previousLayerSize+Constants.useBias, this.numOfNeurons, Constants.initMin, Constants.initMax);
+
+    }
+
+    private void initializeDoubleArray(Double[] array)
+    {
+        for(int i = 0; i<array.length; i++)
+        {
+            array[i] = 0.0;
+        }
     }
 
     private Double[][] makeMatrix(int N, int M, double initMin, double initMax)
