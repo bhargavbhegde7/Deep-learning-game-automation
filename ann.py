@@ -22,7 +22,7 @@ class ANN:
         train the network with the labeled inputs for a maximum number of epochs
         """
         for epoch in range(0, n_epochs):
-            
+
             for i in range(0, len(inputs)):
                 self.set_input(inputs[i])
                 self.forward_propagate()
@@ -124,6 +124,8 @@ class Layer:
 
         self.error = [0] * self.n_neurons
 
+        # Two-dimensional matrix for weights because every node from source layer connects to every node from the destination layer.
+        # So rows in the weights matrix correspond to source layer node index, and columns correspond to the destination layer node index.
         self.weight = make_matrix(prev_layer_size + use_bias , self.n_neurons)
 
         for i in range(len(self.weight)):
@@ -132,8 +134,8 @@ class Layer:
 
 if __name__ == '__main__':
 
-    ann = ANN([2,1])
-    targets = [[0.0],[0.0],[0.0],[1.0]]
+    ann = ANN([2,2,1])
+    targets = [[0.0],[1.0],[1.0],[0.0]]
 
     inputs = [[0.0,0.0],[0.0,1.0],[1.0,0.0],[1.0,1.0]]
     # make preditions with no training
@@ -144,6 +146,6 @@ if __name__ == '__main__':
 
     # train and predict
     print("print with training")
-    ann.train(inputs, targets, 20000)
+    ann.train(inputs, targets, 30000)
     for i in range(len(targets)):
         print(inputs[i], ann.predict(inputs[i]))
