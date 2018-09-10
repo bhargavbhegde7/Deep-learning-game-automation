@@ -120,7 +120,7 @@ public class ANN
         for(int i = 0; i<outputLayer.numOfNeurons; i++)
         {
             double output = outputLayer.outputs[i + Constants.useBias];
-            double error = targetVector[i] = output;
+            double error = targetVector[i] - output;
             outputLayer.errors[i] = derivSquash(outputLayer.inputs[i]) * error;
         }
     }

@@ -2,12 +2,12 @@ package com.bhegde.ann;
 
 public class MainApp {
     public static void main(String[] args) {
-        ANN ann = new ANN(new Integer[]{2,1});
+        ANN ann = new ANN(new Integer[]{2, 1});
         Double[][] targets = new Double[4][1];
 
         targets[0][0] = 0.0;
-        targets[1][0] = 1.0;
-        targets[2][0] = 1.0;
+        targets[1][0] = 0.0;
+        targets[2][0] = 0.0;
         targets[3][0] = 1.0;
 
         Double[][] inputs = new Double[4][2];
@@ -24,7 +24,7 @@ public class MainApp {
         inputs[3][0] = 1.0;
         inputs[3][1] = 1.0;
 
-        //ann.train(inputs, targets, 30000);
+        ann.train(inputs, targets, 100000);
 
         for(int i = 0; i<targets.length; i++)
         {
