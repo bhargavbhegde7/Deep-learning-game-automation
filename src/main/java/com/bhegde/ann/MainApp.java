@@ -1,5 +1,8 @@
 package com.bhegde.ann;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 public class MainApp {
     public static void main(String[] args) {
         ANN ann = new ANN(new Integer[]{2, 1});
@@ -28,7 +31,15 @@ public class MainApp {
 
         for(int i = 0; i<targets.length; i++)
         {
-            System.out.println(inputs[i][0]+", "+inputs[i][1]+" : "+ann.predict(inputs[i])[0]);
+            System.out.println(inputs[i][0]+", "+inputs[i][1]+" : "+round(ann.predict(inputs[i])[0], 4));
         }
+    }
+
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 }
