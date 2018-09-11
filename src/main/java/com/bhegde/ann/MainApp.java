@@ -8,6 +8,7 @@ public class MainApp {
         ANN ann = new ANN(new Integer[]{2, 1});
         Double[][] targets = new Double[4][1];
 
+        //LOGICAL AND
         targets[0][0] = 0.0;
         targets[1][0] = 0.0;
         targets[2][0] = 0.0;
@@ -15,6 +16,7 @@ public class MainApp {
 
         Double[][] inputs = new Double[4][2];
 
+        //TRUTH TABLE
         inputs[0][0] = 0.0;
         inputs[0][1] = 0.0;
 
