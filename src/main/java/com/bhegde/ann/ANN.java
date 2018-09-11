@@ -138,14 +138,14 @@ public class ANN
             Layer srcLayer = layers[layerIndex];
             Layer dstLayer = layers[layerIndex-1];
 
-            for(int dstLayerIndex = 0; dstLayerIndex<dstLayer.numOfNeurons; dstLayerIndex++)
+            for(int dstLayerNeuronIndex = 0; dstLayerNeuronIndex<dstLayer.numOfNeurons; dstLayerNeuronIndex++)
             {
                 double error = 0;
-                for(int srcLayerIndex = 0; srcLayerIndex<srcLayer.numOfNeurons; srcLayerIndex++)
+                for(int srcLayerNeuronIndex = 0; srcLayerNeuronIndex<srcLayer.numOfNeurons; srcLayerNeuronIndex++)
                 {
-                    error += srcLayer.weights[dstLayerIndex+Constants.useBias][srcLayerIndex]*srcLayer.errors[srcLayerIndex];
+                    error += srcLayer.weights[dstLayerNeuronIndex+Constants.useBias][srcLayerNeuronIndex]*srcLayer.errors[srcLayerNeuronIndex];
                 }
-                dstLayer.errors[dstLayerIndex] = derivSquash(dstLayer.inputs[dstLayerIndex]) * error;
+                dstLayer.errors[dstLayerNeuronIndex] = derivSquash(dstLayer.inputs[dstLayerNeuronIndex]) * error;
             }
         }
     }

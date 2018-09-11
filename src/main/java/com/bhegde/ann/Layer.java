@@ -19,11 +19,12 @@ public class Layer
         this.numOfNeurons = layerSize;
         this.biasVal = 1.0;
         this.inputs = new Double[numOfNeurons];
-        initializeDoubleArray(inputs);
         this.outputs = new Double[numOfNeurons + Constants.useBias];
-        initializeDoubleArray(outputs);
         this.outputs[0] = this.biasVal;
         this.errors = new Double[numOfNeurons];
+
+        initializeDoubleArray(inputs);
+        initializeDoubleArray(outputs);
         initializeDoubleArray(errors);
 
         weights = makeMatrix(previousLayerSize+Constants.useBias, this.numOfNeurons, Constants.initMin, Constants.initMax);
