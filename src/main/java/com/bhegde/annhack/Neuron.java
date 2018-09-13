@@ -16,16 +16,20 @@ public class Neuron
 
     Gate sig0 = new SigmoidGate();
 
+    Unit ax;
+    Unit by;
+    Unit axpby;
+    Unit axpbypc;
     Unit s;
 
     public void forwardNeuron()
     {
-        Unit ax = mulg0.forward(a, x);
-        Unit by = mulg1.forward(b, y);
+        ax = mulg0.forward(a, x); // a*x = -1
+        by = mulg1.forward(b, y); // b*y = 6
 
-        Unit axpby = addg0.forward(ax, by);
-        Unit axpbypc = addg1.forward(axpby, c);
+        axpby = addg0.forward(ax, by); // a*x + b*y = 5
+        axpbypc = addg1.forward(axpby, c); // a*x + b*y + c = 2
 
-        s = sig0.forward(axpbypc, null);
+        s = sig0.forward(axpbypc, null); // sig(a*x + b*y + c) = 0.8808
     }
 }

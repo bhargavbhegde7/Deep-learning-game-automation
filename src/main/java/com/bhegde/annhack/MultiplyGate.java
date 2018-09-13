@@ -11,11 +11,11 @@ public class MultiplyGate extends Gate
     @Override
     public Unit forward(Unit unit0, Unit unit1)
     {
-        this.u0 = unit0;
-        this.u1 = unit1;
+        u0 = unit0;
+        u1 = unit1;
 
-        this.utop = new Unit(u0.value * u1.value, 0.0);
-        return this.utop;
+        utop = new Unit(u0.value * u1.value, 0.0);
+        return utop;
     }
 
     /**
@@ -26,7 +26,7 @@ public class MultiplyGate extends Gate
     @Override
     public void backward()
     {
-        this.u0.grad += this.u1.value * this.utop.grad;
-        this.u1.grad += this.u0.value * this.utop.grad;
+        u0.grad += u1.value * utop.grad;
+        u1.grad += u0.value * utop.grad;
     }
 }

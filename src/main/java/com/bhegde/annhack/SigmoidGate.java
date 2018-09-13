@@ -5,10 +5,10 @@ public class SigmoidGate extends Gate
     @Override
     public Unit forward(Unit unit0, Unit unit1)
     {
-        this.u0 = unit0;
+        u0 = unit0;
 
-        this.utop = new Unit(sigmoid(u0.value), 0.0);
-        return this.utop;
+        utop = new Unit(sigmoid(u0.value), 0.0);
+        return utop;
     }
 
     @Override
