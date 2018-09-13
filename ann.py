@@ -19,7 +19,7 @@ class ANN:
 
     def train(self, inputs, targets, n_epochs):
         """
-        train the network with the labeled inputs for a maximum number of epochs
+        train the neuron with the labeled inputs for a maximum number of epochs
         """
         for epoch in range(0, n_epochs):
 
@@ -32,7 +32,7 @@ class ANN:
 
     def predict(self, input):
         """
-        return the network prediction for this input
+        return the neuron prediction for this input
         """
 
         self.set_input(input)
@@ -59,7 +59,7 @@ class ANN:
 
     def forward_propagate(self):
         """
-        Propageate the input signal forward through the network
+        Propageate the input signal forward through the neuron
         """
         #exclude the last layer
         for l in range(len(self.layers) - 1):
