@@ -12,7 +12,7 @@ public class SigmoidGate extends Gate
     }
 
     @Override
-    void backward()
+    public void backward()
     {
         double s = sigmoid(u0.value);
         u0.grad += (s * (1 - s)) * utop.grad;
