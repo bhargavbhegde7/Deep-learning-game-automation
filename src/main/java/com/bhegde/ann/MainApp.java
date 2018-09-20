@@ -5,14 +5,14 @@ import java.math.RoundingMode;
 
 public class MainApp {
     public static void main(String[] args) {
-        ANN ann = new ANN(new Integer[]{2, 1});
+        ANN ann = new ANN(new Integer[]{2, 2, 1});
         Double[][] targets = new Double[4][1];
 
         //LOGICAL AND
         targets[0][0] = 0.0;
-        targets[1][0] = 0.0;
-        targets[2][0] = 0.0;
-        targets[3][0] = 1.0;
+        targets[1][0] = 1.0;
+        targets[2][0] = 1.0;
+        targets[3][0] = 0.0;
 
         Double[][] inputs = new Double[4][2];
 
