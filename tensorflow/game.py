@@ -6,13 +6,13 @@ import pygame
 print(pygame.init())
 
 WINDOW_HEIGHT = 200
-WINDOW_WIDTH = 800
+WINDOW_WIDTH = 200
 
 PLAYER_WIDTH = 10
 PLAYER_HEIGHT = 30
 PLAYER_X_POS = 20
-PLAYER_Y_POS = 170
-PLAYER_Y_ORIGINAL_POS = 170
+PLAYER_Y_POS = WINDOW_HEIGHT - PLAYER_HEIGHT
+PLAYER_Y_ORIGINAL_POS = WINDOW_HEIGHT - PLAYER_HEIGHT
 PLAYER_Y_POS_CHANGE = 0
 JUMP_HEIGHT = 100
 
@@ -20,7 +20,7 @@ POS_CHANGE_GRANULARITY = 5
 
 OBSTACLE_WIDTH = 30
 OBSTACLE_HEIGHT = 40
-OBSTACLE_Y_POS = 160
+OBSTACLE_Y_POS = WINDOW_WIDTH - OBSTACLE_HEIGHT
 OBSTACLE_X_POS = WINDOW_WIDTH
 OBSTACLE_X_POS_CHANGE = 5
 
@@ -47,7 +47,8 @@ def drawObstacles():
 		pygame.draw.rect(gameDisplay, black, [obstacleXPos,OBSTACLE_Y_POS, OBSTACLE_WIDTH, OBSTACLE_HEIGHT])
 
 def addRandomObstacle():
-	obstaclePositions.append(WINDOW_WIDTH)
+	randomValBetween_0_and_50 = 50
+	obstaclePositions.append(WINDOW_WIDTH-randomValBetween_0_and_50)
 	
 while not gameExit:
 
@@ -64,7 +65,7 @@ while not gameExit:
 					PLAYER_Y_POS_CHANGE = -1*POS_CHANGE_GRANULARITY
 
 	# when you have jumped high enough come back
-	if PLAYER_Y_POS == WINDOW_HEIGHT - JUMP_HEIGHT:
+	if PLAYER_Y_POS == PLAYER_Y_ORIGINAL_POS - JUMP_HEIGHT:
 		PLAYER_Y_POS_CHANGE = POS_CHANGE_GRANULARITY
 	
 	# PLAYER_Y_POS_CHANGE > 0 means that the player is coming down
