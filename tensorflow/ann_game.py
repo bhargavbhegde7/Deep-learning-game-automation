@@ -110,33 +110,6 @@ while not gameExit:
 			if OBSTACLE_Y_POS <= PLAYER_Y_POS:
 				gameExit = True
 
-
-	# AUTOMATION OF JUMP AND SCREENSHOT FOR TRAINING 
-	
-	# screen shot only when the player is stationary
-	print(screenshotCount)
-	fileName = str(screenshotCount)+".jpeg"
-	filePath = "screenshots/"+fileName
-	if PLAYER_Y_POS_CHANGE == 0:		
-		pygame.image.save(windowSurface, filePath)
-		screenshotCount += 1
-		
-		# check and jump if appropreate time		
-		isOkayToJump = False
-		# check for an obstacle nearing the player
-		for obstacleXPos in obstaclePositions:
-			if obstacleXPos <= PLAYER_X_POS+20:
-				isOkayToJump = True
-				break
-		
-		if isOkayToJump:
-			# automate jump
-			PLAYER_Y_POS_CHANGE = -1*POS_CHANGE_GRANULARITY
-			
-			putLabelInFile(fileName+", 1")
-		else:
-			putLabelInFile(fileName+", 0")
-
 	gameDisplay.fill(white)
 	pygame.draw.rect(gameDisplay, black, [PLAYER_X_POS,PLAYER_Y_POS, PLAYER_WIDTH, PLAYER_HEIGHT])	
 	drawObstacles()

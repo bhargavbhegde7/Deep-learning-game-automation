@@ -23,8 +23,8 @@ import re
 DATADIR = "screenshots"
 LABELFILE = "labels.txt"
 
-TRAINING_COUNT = 20000
-LAST_NUMBER = 21000
+TRAINING_AMOUNT = 20000
+TESTING_AMOUNT = 1000
 
 training_data_samples = []
 def create_training_samples():
@@ -32,7 +32,7 @@ def create_training_samples():
 	path = os.path.join(DATADIR)
 	
 	IMG_SIZE = 100
-	for img in tqdm(range(1, TRAINING_COUNT+1)):
+	for img in tqdm(range(0, TRAINING_AMOUNT)):
 		try:
 			img_array = cv2.imread(os.path.join(path,str(img)+".jpeg") ,cv2.IMREAD_GRAYSCALE)
 			new_array = cv2.resize(img_array, (IMG_SIZE, IMG_SIZE))
@@ -47,7 +47,7 @@ def create_test_samples():
 	path = os.path.join(DATADIR)
 	
 	IMG_SIZE = 100
-	for img in tqdm(range(TRAINING_COUNT+1, LAST_NUMBER+1)):
+	for img in tqdm(range(TRAINING_AMOUNT, TRAINING_AMOUNT+TESTING_AMOUNT)):
 		try:
 			img_array = cv2.imread(os.path.join(path,str(img)+".jpeg") ,cv2.IMREAD_GRAYSCALE)
 			new_array = cv2.resize(img_array, (IMG_SIZE, IMG_SIZE))
@@ -58,25 +58,25 @@ def create_test_samples():
 
 training_data_labels = []
 def create_training_labels():
-	count = 1
+	count = 0
 	img_name = ""
 	with open(LABELFILE) as f:
 		for line in f:
-			if count >= TRAINING_COUNT+1:
+			if count >= TRAINING_AMOUNT:
 				break
 			array_of_words = line.split(',')
 			training_data_labels.append(int(array_of_words[1]))
 			img_name = array_of_words[0]
 				
 			count += 1
-
+			
 test_data_labels = []
 def create_test_labels():
-	count = 1
+	count = 0
 	img_name = ""
 	with open(LABELFILE) as f:
 		for line in f:
-			if count > TRAINING_COUNT and count < LAST_NUMBER+1:
+			if count >= TRAINING_AMOUNT and count < TRAINING_AMOUNT+TESTING_AMOUNT:
 				array_of_words = line.split(',')
 				test_data_labels.append(int(array_of_words[1]))
 				img_name = array_of_words[0]
@@ -90,16 +90,14 @@ create_test_samples()
 create_test_labels()
 
 x_train = training_data_samples
-y_train = np.zeros((20000,), dtype=int)
+y_train = np.zeros((TRAINING_AMOUNT,), dtype=int)
 for index, val in enumerate(training_data_labels):
 	y_train[index] = val
-#y_train = training_data_labels
 
 x_test = test_data_samples
-y_test = np.zeros((1000,), dtype=int)
+y_test = np.zeros((TESTING_AMOUNT,), dtype=int)
 for index, val in enumerate(test_data_labels):
 	y_test[index] = val
-#y_test = test_data_labels
 
 
 
@@ -131,10 +129,8 @@ print(val_acc)  # model's accuracy
 predictions = model.predict(x_test)
 print("---------------------------")
 
-#print(np.argmax(predictions[50]))
-
-count = 1
+count = 0
 for prediction in predictions:
 	if np.argmax(prediction) == 1:
-		print(20000+count, '--', np.argmax(prediction), '--', y_test[count-1])
+		print(TRAINING_AMOUNT+count, '--', np.argmax(prediction), '--', y_test[count])
 	count += 1
