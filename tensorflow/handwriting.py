@@ -8,8 +8,8 @@ x_test = tf.keras.utils.normalize(x_test, axis=1)  # scales data between 0 and 1
 
 model = tf.keras.models.Sequential()  # a basic feed-forward model
 model.add(tf.keras.layers.Flatten())  # takes our 28x28 and makes it 1x784
-model.add(tf.keras.layers.Dense(128, activation=tf.nn.relu))  # a simple fully-connected layer, 128 units, relu activation
-model.add(tf.keras.layers.Dense(128, activation=tf.nn.relu))  # a simple fully-connected layer, 128 units, relu activation
+model.add(tf.keras.layers.Dense(100, activation=tf.nn.relu))  # a simple fully-connected layer, 128 units, relu activation
+model.add(tf.keras.layers.Dense(100, activation=tf.nn.relu))  # a simple fully-connected layer, 128 units, relu activation
 model.add(tf.keras.layers.Dense(10, activation=tf.nn.softmax))  # our output layer. 10 units for 10 classes. Softmax for probability distribution
 
 model.compile(optimizer='adam',  # Good default optimizer to start with

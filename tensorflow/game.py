@@ -22,7 +22,7 @@ OBSTACLE_WIDTH = 30
 OBSTACLE_HEIGHT = 40
 OBSTACLE_Y_POS = WINDOW_WIDTH - OBSTACLE_HEIGHT
 OBSTACLE_X_POS = WINDOW_WIDTH
-OBSTACLE_X_POS_CHANGE = 5
+OBSTACLE_X_POS_CHANGE = 2
 
 obstaclePositions = []
 
@@ -49,7 +49,21 @@ def drawObstacles():
 def addRandomObstacle():
 	randomValBetween_0_and_50 = 50
 	obstaclePositions.append(WINDOW_WIDTH-randomValBetween_0_and_50)
+
+def putLabelInFile(value):	
+	scoresFile.write(value+"\n")	
+
+def isOkayToJump():
+	# check for an obstacle nearing the player
+	for obstacleXPos in obstaclePositions:
+		if obstacleXPos <= PLAYER_X_POS+20:
+			return True
+	return False
 	
+def jump():
+	PLAYER_Y_POS_CHANGE = -1*POS_CHANGE_GRANULARITY
+
+scoresFile = open("labels.txt","a")
 while not gameExit:
 
 	# event loop
@@ -71,11 +85,6 @@ while not gameExit:
 	# PLAYER_Y_POS_CHANGE > 0 means that the player is coming down
 	if PLAYER_Y_POS_CHANGE > 0 and PLAYER_Y_POS == PLAYER_Y_ORIGINAL_POS:
 		PLAYER_Y_POS_CHANGE = 0
-	
-	# screen shot only when the player is stationary
-	if PLAYER_Y_POS_CHANGE == 0:
-		pygame.image.save(windowSurface, "screenshots/screenshot_"+str(screenshotCount)+".jpeg")
-		screenshotCount += 1
 
 	# update the position of player
 	PLAYER_Y_POS += PLAYER_Y_POS_CHANGE
@@ -101,12 +110,30 @@ while not gameExit:
 			if OBSTACLE_Y_POS <= PLAYER_Y_POS:
 				gameExit = True
 	
-	# automate jump
-	# check for an obstacle nearing the player
-	for obstacleXPos in obstaclePositions:
-		if obstacleXPos <= PLAYER_X_POS+100:
+	# screen shot only when the player is stationary
+	print(screenshotCount)
+	fileName = str(screenshotCount)+".jpeg"
+	filePath = "screenshots/"+fileName
+	if PLAYER_Y_POS_CHANGE == 0:		
+		pygame.image.save(windowSurface, filePath)
+		screenshotCount += 1
+		
+		# check and jump if appropreate time		
+		isOkayToJump = False
+		# check for an obstacle nearing the player
+		for obstacleXPos in obstaclePositions:
+			if obstacleXPos <= PLAYER_X_POS+20:
+				isOkayToJump = True
+				break
+		
+		if isOkayToJump:
+			# automate jump
 			PLAYER_Y_POS_CHANGE = -1*POS_CHANGE_GRANULARITY
-	
+			
+			putLabelInFile(fileName+", 1")
+		else:
+			putLabelInFile(fileName+", 0")
+
 	gameDisplay.fill(white)
 	pygame.draw.rect(gameDisplay, black, [PLAYER_X_POS,PLAYER_Y_POS, PLAYER_WIDTH, PLAYER_HEIGHT])	
 	drawObstacles()
@@ -114,6 +141,7 @@ while not gameExit:
 	iterationCOunt += 1
 
 	clock.tick(FRAME_RATE)
-
+	
+scoresFile.close()
 pygame.quit()
 quit()
