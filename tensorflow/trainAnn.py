@@ -127,6 +127,7 @@ print(val_loss)  # model's loss (error)
 print(val_acc)  # model's accuracy
 
 predictions = model.predict(x_test)
+
 print("---------------------------")
 
 count = 0
