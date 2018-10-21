@@ -1,3 +1,5 @@
+![Alt Text](https://github.com/bhargavbhegde7/LearnANN/blob/master/ann.gif)
+
 Hacker's guide to ANN
 http://karpathy.github.io/neuralnets/
 
