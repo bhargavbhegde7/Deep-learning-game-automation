@@ -1,5 +1,6 @@
 tutorial from https://pythonprogramming.net/introduction-deep-learning-python-tensorflow-keras/
-installing gpu tensorflow : https://dzone.com/articles/installing-tensorflow-with-gpu-on-windows-10 
+installing gpu tensorflow : https://dzone.com/articles/installing-tensorflow-with-gpu-on-windows-10
+(CUDA 9.0 and cuDNN v7.3.1 (Sept 28, 2018), for CUDA 9.0)
 docker stuff for tensorflow from https://selfdrivingcars.mit.edu/setting-up-docker-and-tensorflow-for-windows/
 
 docker pull tensorflow/tensorflow

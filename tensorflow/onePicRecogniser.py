@@ -3,6 +3,7 @@ import numpy as np
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 import _pickle as cPickle
+from keras.models import model_from_json
 
 sess = tf.Session(config=tf.ConfigProto(log_device_placement=True))
 
@@ -35,17 +36,6 @@ model.compile(optimizer='adam',  # Good default optimizer to start with
 
 model.fit(x_train, y_train, epochs=3)  # train the model
 
-#save the model
-f = open('obj.save', 'wb')
-cPickle.dump(model, f, protocol=cPickle.HIGHEST_PROTOCOL)
-f.close()
-
-#load model
-f = open('obj.save', 'rb')
-model_new = cPickle.load(f)
-f.close()
-
-
 y_test = np.zeros((10000,), dtype=int)
 
 i = 0
@@ -54,11 +44,38 @@ for eachValue in tqdm(y_test_old):
         y_test[i] = 1
     i = i+1
 
-val_loss, val_acc = model_new.evaluate(x_test, y_test)  # evaluate the out of sample data with model
+# ------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------
+'''
+# save the model to desk
+model_json = model.to_json()
+with open("model.json", "w") as json_file:
+	json_file.write(model_json)
+
+# serialize the weights
+model.save_weights("model.h5")
+print(" ----- saved model to disk")
+'''
+
+# serialize model to YAML
+model_yaml = model.to_yaml()
+with open("model.yaml", "w") as yaml_file:
+    yaml_file.write(model_yaml)
+	
+# serialize weights to HDF5
+model.save_weights("model.h5")
+print("Saved model to disk")
+
+# ------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------
+	
+val_loss, val_acc = model.evaluate(x_test, y_test)  # evaluate the out of sample data with model
 print(val_loss)  # model's loss (error)
 print(val_acc)  # model's accuracy
 
-predictions = model_new.predict(x_test)
+predictions = model.predict(x_test)
 print("---------------------------")
 
 print(np.argmax(predictions[0]))
