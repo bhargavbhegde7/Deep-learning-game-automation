@@ -1,9 +1,10 @@
 import pygame
+from random import randint
 
 print(pygame.init())
 
 WINDOW_HEIGHT = 200
-WINDOW_WIDTH = 200
+WINDOW_WIDTH = 600
 
 PLAYER_WIDTH = 10
 PLAYER_HEIGHT = 30
@@ -15,13 +16,13 @@ JUMP_HEIGHT = 100
 
 POS_CHANGE_GRANULARITY = 5
 
-OBSTACLE_WIDTH = 30
-OBSTACLE_HEIGHT = 40
-OBSTACLE_Y_POS = WINDOW_WIDTH - OBSTACLE_HEIGHT
+MIN_OBSTACLE_WIDTH = 20
+MIN_OBSTACLE_HEIGHT = 20
+OBSTACLE_Y_POS = 160
 OBSTACLE_X_POS = WINDOW_WIDTH
 OBSTACLE_X_POS_CHANGE = 2
 
-obstaclePositions = []
+obstacles = []
 
 screenshotCount = 0
 iterationCOunt = 0
@@ -39,21 +40,34 @@ pygame.display.update()
 
 clock = pygame.time.Clock()
 
+class Obstacle:
+	def __init__(self, x, y, width, height):
+		self.x = x
+		self.y = y
+		self.width = width
+		self.height = height
+
 def drawObstacles():
-	for obstacleXPos in obstaclePositions:
-		pygame.draw.rect(gameDisplay, black, [obstacleXPos,OBSTACLE_Y_POS, OBSTACLE_WIDTH, OBSTACLE_HEIGHT])
+	for obstacle in obstacles:
+		pygame.draw.rect(gameDisplay, black, [obstacle.x, WINDOW_HEIGHT-obstacle.height, obstacle.width, obstacle.height])
 
 def addRandomObstacle():
-	randomValBetween_0_and_50 = 50
-	obstaclePositions.append(WINDOW_WIDTH-randomValBetween_0_and_50)
+	if len(obstacles) < 4:
+		newObstaclePos = WINDOW_WIDTH
+		if len(obstacles) > 0:
+			lastObstaclePos = obstacles[-1].x
+			newObstaclePos = lastObstaclePos + randint(100, 200)
+		height = MIN_OBSTACLE_HEIGHT+randint(0, 30)
+		width = MIN_OBSTACLE_WIDTH+randint(0, 20)		
+		obstacles.append(Obstacle(newObstaclePos, WINDOW_HEIGHT-height, width, height))
 
 def putLabelInFile(value):	
-	scoresFile.write(value+"\n")	
-
+	scoresFile.write(value+"\n")
+		
 def isOkayToJump():
 	# check for an obstacle nearing the player
-	for obstacleXPos in obstaclePositions:
-		if obstacleXPos <= PLAYER_X_POS+20:
+	for obstacle in obstacles:
+		if obstacle.x <= PLAYER_X_POS+20:
 			return True
 	return False
 	
@@ -61,7 +75,7 @@ def jump():
 	PLAYER_Y_POS_CHANGE = -1*POS_CHANGE_GRANULARITY
 
 scoresFile = open("dataset/labels/labels.txt","a")
-NUMBER_OF_DATASETS = 10000
+NUMBER_OF_DATASETS = 50000
 DATASET_PATH = "dataset/samples/"
 while not gameExit:
 
@@ -89,26 +103,25 @@ while not gameExit:
 	PLAYER_Y_POS += PLAYER_Y_POS_CHANGE
 	
 	# update the position of the each obstacle
-	for index, position in enumerate(obstaclePositions):
-		obstaclePositions[index] -= OBSTACLE_X_POS_CHANGE
+	for index, obstacle in enumerate(obstacles):
+		obstacles[index].x -= OBSTACLE_X_POS_CHANGE
 	
 	# remove the passed obstacle from the obstacle list
-	for index, obstacleXPos in enumerate(obstaclePositions):
-		if obstacleXPos < 0:
-			obstaclePositions.pop(index)
+	for index, obstacle in enumerate(obstacles):
+		if obstacle.x < 0:
+			obstacles.pop(index)
 		
 	# add an obstacle every 100th iteration
-	if iterationCOunt % 100 == 0:
-		addRandomObstacle()	
+	#if iterationCOunt % 100 == 0:
+	addRandomObstacle()	
 
 	# check if an obstacle collided with the player 
-	for obstacleXPos in obstaclePositions:
+	for obstacle in obstacles:
 		# check if obstacle has crossed into the player's territory
-		if obstacleXPos < PLAYER_X_POS+PLAYER_WIDTH:
+		if obstacle.x < PLAYER_X_POS+PLAYER_WIDTH:
 			# check if player is blocking
-			if OBSTACLE_Y_POS <= PLAYER_Y_POS:
+			if obstacle.y <= PLAYER_Y_POS:
 				gameExit = True
-
 
 	# AUTOMATION OF JUMP AND SCREENSHOT FOR TRAINING 
 	
@@ -118,15 +131,17 @@ while not gameExit:
 		gameExit = True
 	fileName = str(screenshotCount)+".jpeg"
 	filePath = DATASET_PATH+fileName
-	if PLAYER_Y_POS_CHANGE == 0:		
-		pygame.image.save(windowSurface, filePath)
+	if PLAYER_Y_POS_CHANGE == 0:
+		rect = pygame.Rect(0, 0, 200, 200)#left, top, width, height
+		sub = windowSurface.subsurface(rect)
+		pygame.image.save(sub, filePath)
 		screenshotCount += 1
 		
 		# check and jump if appropreate time		
 		isOkayToJump = False
 		# check for an obstacle nearing the player
-		for obstacleXPos in obstaclePositions:
-			if obstacleXPos <= PLAYER_X_POS+20:
+		for obstacle in obstacles:
+			if obstacle.x <= PLAYER_X_POS+20:
 				isOkayToJump = True
 				break
 		
@@ -137,7 +152,8 @@ while not gameExit:
 			putLabelInFile(fileName+", 1")
 		else:
 			putLabelInFile(fileName+", 0")
-
+			pass
+				
 	gameDisplay.fill(white)
 	pygame.draw.rect(gameDisplay, black, [PLAYER_X_POS,PLAYER_Y_POS, PLAYER_WIDTH, PLAYER_HEIGHT])	
 	drawObstacles()

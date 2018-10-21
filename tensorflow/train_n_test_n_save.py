@@ -14,7 +14,7 @@ DATASET_PATH = "dataset"
 DATADIR = DATASET_PATH+"/"+"samples"
 LABELFILE = DATASET_PATH+"/"+"labels"+"/"+"labels.txt"
 
-TRAINING_AMOUNT = 8000
+TRAINING_AMOUNT = 40000
 TESTING_AMOUNT = 2000
 
 training_data_samples = []
@@ -110,7 +110,7 @@ model.compile(optimizer='adam',  # Good default optimizer to start with
               loss='sparse_categorical_crossentropy',  # how will we calculate our "error." Neural network aims to minimize loss.
               metrics=['accuracy'])  # what to track
 
-model.fit(x_train, y_train, epochs=3)  # train the model
+model.fit(x_train, y_train, epochs=5)  # train the model
 
 val_loss, val_acc = model.evaluate(x_test, y_test)  # evaluate the out of sample data with model
 print(val_loss)  # model's loss (error)
