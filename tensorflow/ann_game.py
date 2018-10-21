@@ -1,96 +1,39 @@
-# youtube thenewboston python game development
-# https://youtu.be/pNjSyBlbl_Q?list=PL6gx4Cwl9DGAjkwJocj7vlc_mFU-4wXJq
-
 import pygame
-
-#---------------------------------------------------------------
-#------------------------ ANN TRAINING PART --------------------
-#---------------------------------------------------------------
-
 import tensorflow as tf  # deep learning library. Tensors are just multi-dimensional arrays
 import numpy as np
-
-#---------------------------------------------------------------------------------
-#---------------------------------------------------------------------------------
-#---------------------------------------------------------------------------------
-
-import numpy as np
-import matplotlib.pyplot as plt
-import os
 import cv2
-from tqdm import tqdm
-import re
+from keras.models import model_from_yaml
+# from keras.models import model_from_json
 
-DATADIR = "screenshots"
-LABELFILE = "labels.txt"
-
-TRAINING_AMOUNT = 20000
-
-training_data_samples = []
-def create_training_samples():
-	#for imgName in range(1, 194776):
-	path = os.path.join(DATADIR)
-	
-	IMG_SIZE = 100
-	for img in tqdm(range(0, TRAINING_AMOUNT)):
-		try:
-			img_array = cv2.imread(os.path.join(path,str(img)+".jpeg") ,cv2.IMREAD_GRAYSCALE)
-			new_array = cv2.resize(img_array, (IMG_SIZE, IMG_SIZE))
-			training_data_samples.append(new_array)
-		except Exception as e:
-			print(e)
-			pass
-
-training_data_labels = []
-def create_training_labels():
-	count = 0
-	img_name = ""
-	with open(LABELFILE) as f:
-		for line in f:
-			if count >= TRAINING_AMOUNT:
-				break
-			array_of_words = line.split(',')
-			training_data_labels.append(int(array_of_words[1]))
-			img_name = array_of_words[0]
-				
-			count += 1
-			
-create_training_samples()
-create_training_labels()
-
-x_train = training_data_samples
-y_train = np.zeros((TRAINING_AMOUNT,), dtype=int)
-for index, val in enumerate(training_data_labels):
-	y_train[index] = val
+# ------------------------------------------------------------------------------------
+# ---------------------------- LOAD THE MODEL ----------------------------------------
+# ------------------------------------------------------------------------------------
 
 '''
-for index, val in enumerate(y_train):
-	if val == 1:
-		plt.imshow(x_train[index],cmap=plt.cm.binary)
-		plt.show()
+# load saved model
+json_file = open('model.json', 'r')
+loaded_model_json = json_file.read()
+json_file.close()
+loaded_model = model_from_json(loaded_model_json, custom_objects={'GlorotUniform': tf.keras.initializers.glorot_uniform(seed=None)})
 '''
-	
-#---------------------------------------------------------------------------------
-#---------------------------------------------------------------------------------
-#---------------------------------------------------------------------------------
 
-x_train = tf.keras.utils.normalize(x_train, axis=1)  # scales data between 0 and 1
+# load YAML and create model
+yaml_file = open('model.yaml', 'r')
+loaded_model_yaml = yaml_file.read()
+yaml_file.close()
+loaded_model = model_from_yaml(loaded_model_yaml, custom_objects={'GlorotUniform': tf.keras.initializers.glorot_uniform(seed=None)})
 
-model = tf.keras.models.Sequential()  # a basic feed-forward model
-model.add(tf.keras.layers.Flatten())  # takes our 28x28 and makes it 1x784
-model.add(tf.keras.layers.Dense(128, activation=tf.nn.relu))  # a simple fully-connected layer, 128 units, relu activation
-model.add(tf.keras.layers.Dense(128, activation=tf.nn.relu))  # a simple fully-connected layer, 128 units, relu activation
-model.add(tf.keras.layers.Dense(2, activation=tf.nn.softmax))  # our output layer. 10 units for 10 classes. Softmax for probability distribution
-
-model.compile(optimizer='adam',  # Good default optimizer to start with
+loaded_model.compile(optimizer='adam',  # Good default optimizer to start with
               loss='sparse_categorical_crossentropy',  # how will we calculate our "error." Neural network aims to minimize loss.
               metrics=['accuracy'])  # what to track
 
-model.fit(x_train, y_train, epochs=3)  # train the model
+# load weights into the new model
+loaded_model.load_weights("model.h5")
+print(" ----- loaded model from disk")
 
-#---------------------------------------------------------------
-#------------------------ ANN TRAINING PART --------------------
-#---------------------------------------------------------------
+# ------------------------------------------------------------------------------------
+# ---------------------------- LOAD THE MODEL ----------------------------------------
+# ------------------------------------------------------------------------------------
 
 #---------------------------------------------------------------
 #---------------------------------------------------------------
@@ -145,9 +88,6 @@ def addRandomObstacle():
 	randomValBetween_0_and_50 = 50
 	obstaclePositions.append(WINDOW_WIDTH-randomValBetween_0_and_50)
 
-def putLabelInFile(value):	
-	scoresFile.write(value+"\n")	
-
 def isOkayToJump():
 	# check for an obstacle nearing the player
 	for obstacleXPos in obstaclePositions:
@@ -158,7 +98,6 @@ def isOkayToJump():
 def jump():
 	PLAYER_Y_POS_CHANGE = -1*POS_CHANGE_GRANULARITY
 
-scoresFile = open("labels.txt","a")
 while not gameExit:
 #while True:
 
@@ -210,8 +149,6 @@ while not gameExit:
 	if PLAYER_Y_POS_CHANGE == 0:
 		# take a screen shot
 		IMG_SIZE = 100
-		#surface = pygame.Surface((IMG_SIZE, IMG_SIZE))
-		#surface = pygame.Surface((IMG_SIZE, IMG_SIZE))
 		
 		imgdata = pygame.surfarray.array3d(windowSurface)
 		imgdata.swapaxes(0,1)
@@ -229,18 +166,13 @@ while not gameExit:
 
 		horizontal_mirror = cv2.flip(rotated270, 1)
 		
-		'''
-		plt.imshow(horizontal_mirror, cmap=plt.cm.binary)
-		plt.show()
-		'''
-		
 		test_data_sample = []
 		test_data_sample.append(horizontal_mirror)
 		
 		test_data_sample = tf.keras.utils.normalize(test_data_sample, axis=1)
 
 		# check if it is okay to jump
-		predictions = model.predict(test_data_sample)
+		predictions = loaded_model.predict(test_data_sample)
 		
 		jump = False
 		if np.argmax(predictions[0]) == 1:
@@ -261,6 +193,5 @@ while not gameExit:
 
 	clock.tick(FRAME_RATE)
 	
-scoresFile.close()
 pygame.quit()
 quit()
