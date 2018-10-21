@@ -4,6 +4,8 @@ from tqdm import tqdm
 import matplotlib.pyplot as plt
 import _pickle as cPickle
 
+sess = tf.Session(config=tf.ConfigProto(log_device_placement=True))
+
 mnist = tf.keras.datasets.mnist  # mnist is a dataset of 28x28 images of handwritten digits and their labels
 (x_train, y_train_old),(x_test, y_test_old) = mnist.load_data()  # unpacks images to x_train/x_test and labels to y_train_old/y_test_old
 
