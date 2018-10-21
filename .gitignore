@@ -4,3 +4,4 @@ target/*
 tensorflow/screenshots/*
 labels.txt
 tensorflow/dataset
+.zip
