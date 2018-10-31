@@ -1,5 +1,7 @@
 ![Alt Text](https://github.com/bhargavbhegde7/LearnANN/blob/master/ann.gif)
 
+Code to the above game can be found under the 'tensorflow' folder
+
 Hacker's guide to ANN
 http://karpathy.github.io/neuralnets/
 
