@@ -1,0 +1,2 @@
+model_checkpoint_path: "D:\\work\\LearnANN\\snake_game\\snake_nn_2.tflearn"
+all_model_checkpoint_paths: "D:\\work\\LearnANN\\snake_game\\snake_nn_2.tflearn"

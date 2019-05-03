@@ -2,6 +2,5 @@ __pycache__/
 target/*
 .idea/*
 tensorflow/screenshots/*
-labels.txt
-tensorflow/dataset
+tensorflow/dataset/samples/*
 .zip
