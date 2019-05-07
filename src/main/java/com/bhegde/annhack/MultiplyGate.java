@@ -26,7 +26,9 @@ public class MultiplyGate extends Gate
     @Override
     public void backward()
     {
-        u0.grad += u1.value * utop.grad;
-        u1.grad += u0.value * utop.grad;
+        double u0Gradient = u1.value; // because in multiply case one input's gradient is the other input.
+        double u1Gradient = u0.value; // x derivative is y and y derivative is x
+        u0.grad += u0Gradient * utop.grad;
+        u1.grad += u1Gradient * utop.grad;
     }
 }

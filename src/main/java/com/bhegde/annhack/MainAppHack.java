@@ -13,25 +13,29 @@ public class MainAppHack
     {
         Neuron neuron = new Neuron();
         neuron.forwardNeuron();
-        System.out.println(round(neuron.s.value, 4));
+        System.out.println("iteration : 0 : "+round(neuron.s.value, 4));
 
-        neuron.s.grad = 1.0;
-        neuron.sig0.backward(); // writes gradient into axpbypc
-        neuron.addg1.backward(); // writes gradients into axpby and c
-        neuron.addg0.backward(); // writes gradients into ax and by
-        neuron.mulg1.backward(); // writes gradients into b and y
-        neuron.mulg0.backward(); // writes gradients into a and x
+        for(int i = 0; i<1000; i++)
+        {
+            neuron.s.grad = 1.0;
+            neuron.sig0.backward(); // writes gradient into axpbypc
+            neuron.addg1.backward(); // writes gradients into axpby and c
+            neuron.addg0.backward(); // writes gradients into ax and by
+            neuron.mulg1.backward(); // writes gradients into b and y
+            neuron.mulg0.backward(); // writes gradients into a and x
 
-        double step_size = 0.01;
-        neuron.a.value += step_size * neuron.a.grad; // a.grad is -0.105
-        neuron.b.value += step_size * neuron.b.grad; // b.grad is 0.315
-        neuron.c.value += step_size * neuron.c.grad; // c.grad is 0.105
-        neuron.x.value += step_size * neuron.x.grad; // x.grad is 0.105
-        neuron.y.value += step_size * neuron.y.grad; // y.grad is 0.210
+            double step_size = 0.01;
+            neuron.a.value += step_size * neuron.a.grad; // a.grad is -0.105
+            neuron.b.value += step_size * neuron.b.grad; // b.grad is 0.315
+            neuron.c.value += step_size * neuron.c.grad; // c.grad is 0.105
+            neuron.x.value += step_size * neuron.x.grad; // x.grad is 0.105
+            neuron.y.value += step_size * neuron.y.grad; // y.grad is 0.210
 
-        neuron.forwardNeuron();
+            neuron.forwardNeuron();
 
-        System.out.println(round(neuron.s.value, 4));
+            int index = i+1;
+            System.out.println("iteration : "+index+" : "+round(neuron.s.value, 4));
+        }
     }
 
     public static double round(double value, int places) {
